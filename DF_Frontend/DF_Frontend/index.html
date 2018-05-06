@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>dragonfly</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/login.css">
+   
+  <link href="assets/css/main.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+  <!--
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script> -->
+
+  
+ <!--open layers v4.3.3 
+   <link rel="stylesheet" href="https://openlayers.org/en/v4.6.4/css/ol.css" type="text/css">
+    
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.6.4/build/ol.js"></script> -->
+
+ <!--   open layers v4.4.1
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.4.1/ol.css" />
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.4.1/ol.js"></script>  -->
+
+
+<!-- open layers v3.8.2 
+<link rel="stylesheet" href="http://openlayers.org/en/v3.8.2/css/ol.css" type="text/css">
+<script src="http://openlayers.org/en/v3.8.2/build/ol.js"></script> -->
+
+
+<!-- open layers v3.8.2  from cdn  --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.8.2/ol.css" type="text/css">
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.8.2/ol.js" type="text/javascript"></script> 
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+<!-- d3 js
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script> -->
+
+<script src="assets/js/urls.js"></script>
+<script src="assets/js/global_variables.js"></script>
+
+<script src="assets/js/cache.js"></script>
+<script src="assets/js/maps.js"></script>
+<script src="assets/js/event_handler.js"></script>
+<script src="assets/js/statistics.js"></script>
+<script src="assets/js/login.js"></script>
+<script src="assets/js/ext-lib/jquery.blockUI.js"></script>
+
+<!--Script inclusion for multi player START -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script src="assets/js/multiplayer_client.js"></script>
+<!--Script inclusion for multi player END -->
+
+</head>
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+
+$("#workspace-select").hide();
+$("#map").hide();
+
+  var data =  fetchUsers();
+ 
+
+});
+</script>
+
+<nav class="w3-sidenav w3-light-grey w3-card-2 w3-animate-right w3-border" style="display:none;right:0;" id="rightMenu">
+  <a href="javascript:void(0)" onclick="closeRightMenu()" class="w3-closenav w3-large w3-border-bottom">Close &times;</a>
+  <a class="w3-hover-green" onclick="goHome()" href="#">Home</a>
+   <div class="w3-accordion">
+    <a class="w3-hover-green" href="#" onclick="expand_tools_classes()">Class labels <i class="fa fa-caret-down"></i></a>
+      <div id="showAlllabels" class="w3-accordion-content w3-white w3-card-4 span12">
+        <div class="col-sm-1"><input type="checkbox" name="class_label_all_checkbox" id="class_label_all_checkbox" onclick="show_all_labels()" checked/></div>
+        <div id="showAlllabels1" class="font-bold">Show all labels</div>
+      </div>
+      <div id="classlabels" class="w3-accordion-content w3-white w3-card-4 span12">
+      </div>
+  </div>
+  <div class="w3-accordion">
+    <a class="w3-hover-green" href="#" onclick="expand_tools_accord()">Tools <i class="fa fa-caret-down"></i></a>
+        <div id="draw_tools" class="w3-accordion-content w3-white w3-card-4 span12">
+              <a href="#" onclick="draw_point()" id="tools_point"> <img src="assets/images/point.png"/>&nbsp;Point</a>
+              <a href="#" onclick="draw_line()" id="tools_line"> <img src="assets/images/line.png"/> &nbsp;Line</a>
+              <a href="#" onclick="draw_circle()" id="tools_circle"> <img src="assets/images/circle.png"/> &nbsp;Circle</a>
+              <a href="#" onclick="draw_rectangle()" id="tools_rectangle"> <img src="assets/images/box.png"/> &nbsp;Rectangle</a>
+              <a href="#" onclick="draw_square()" id="tools_square"> <img src="assets/images/box.png"/> &nbsp;square</a>
+              <a href="#" onclick="draw_polygon()" id="tools_polygon" data-toggle="tooltip" title="Click on the last point to complete Polygon" data-placement="bottom"> <img src="assets/images/polygon.png"/>&nbsp;Polygon</a>
+              <a href="#" onclick="draw_polyline()" id="tools_polyline"> <img src="assets/images/polyline.png"/> &nbsp;Polyline</a>
+              <a href="#" onclick="draw_freeform()" id="tools_freeform" data-toggle="tooltip" title="Hold Shift key to draw. Click on the last point to complete freefrom" data-placement="bottom"> <img src="assets/images/freeform.png"/>&nbsp; Freeform</a>
+          <!--    <a href="#" onclick="draw_curve()"> <img src="assets/images/bspline.png"/>&nbsp;Curve</a> -->
+        </div>
+ </div>
+  <!--<a class="w3-hover-green" href="#">Save</a>
+  <a class="w3-hover-green" href="#" onclick="delete_objects()">Delete</a>
+  <a class="w3-hover-green" href="#">Export</a> 
+  <a class="w3-hover-green" href="#">Algorithms</a> -->
+  <a class="w3-hover-green" onclick="refresh()" href="#" >Refresh</a> 
+  <a class="w3-hover-green" href="#" onclick="logout()" >Logout</a>
+  <a class="w3-hover-green" href="#">Help</a>
+</nav>
+
+<!-- Overlay -->
+<div class="w3-overlay" id = "page_overlay" onclick="w3_close()" style="cursor:pointer"></div>
+
+<!--Header Div -->
+<header class="w3-container  w3-black" id="header">
+
+    <span class="w3-opennav w3-xlarge w3-right hide_elem" id="nav_span" onclick="openRightMenu()">&#9776;</span>
+    <span class="w3-opennav w3-large w3-wide w3-left navbar-logo-container" ><img src="assets/images/mu2.png"/></span>&nbsp;DragonFly - Image annotation tool </span>
+     
+</header>   
+
+
+<!-- container-fluid Div closes-->
+
+<div class="container-fluid" id="containerDivId">
+   <div class="row-fluid">  
+      <div class="login" id="loginDiv">
+       <div class="login-form">
+          <div id="login_err_msg" style="display:none; color:red">Unable to login. Incorrect credentials.</div><br>
+          <input id = "username" list="user-list" type="text" placeholder="Username"  class="login-textbox" /><br>
+          <datalist id="user-list" class='scrollable'>
+           </datalist>
+         
+      
+
+          <input id="password" type="password" placeholder="Password" class="login-textbox"/>
+          <br>
+          <input type="button" value="Login" class="login-button" onclick="login()"/>
+          <br>
+          <a class="sign-up">Sign Up!</a>
+          <br>
+          <h6 class="no-access">civalab@mizzou</h6>
+        </div> 
+     </div> <!-- Login div div closes-->
+</div>
+
+
+<div class="row-fluid">
+
+<div id="workspace-select" class="acc-container" >
+  <div id="labs" class="acc-btn"  style="overflow-x:auto;">
+    <div class="acc-font w3-center w3-round-large acc-sec-header">Select Lab</div>
+    <table id="tblLabsId" class="table" >
+    <thead>
+      <tr class="acc-font">
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody  data-link="row" class="rowlink">
+    </tbody>
+  </table>
+
+  </div>
+
+  <div id="project" class="acc-btn" style="overflow-x:auto;">
+     <div class="acc-font w3-center w3-round-large acc-sec-header">Select Project</div>
+     <table id="tblProjectId" class="table" >
+    <thead>
+      <tr class="acc-font">
+        <th>Id</th>
+        <th>Title</th>
+        <th>Creator</th>
+      </tr>
+    </thead>
+    <tbody  data-link="row" class="rowlink">
+    </tbody>
+  </table>
+  </div> <!--project div closes-->
+
+  <div id="imageset" class="acc-btn"  style="overflow-x:auto;">
+     <div class="acc-font w3-center w3-round-large acc-sec-header">Select Imageset</div>
+      <table id="tblImageset" class="" >
+    <thead>
+      <tr class="acc-font">
+        <th>Imageset</th>
+        <th>Frames</th>
+        <th>Width</th>
+        <th>Height</th>
+      </tr>
+    </thead>
+    <tbody  data-link="row" class="rowlink">
+    </tbody>
+  </table>
+  </div>
+
+  <div id="annotation" class="acc-btn" style="overflow-x:auto;">
+     <div class="acc-font w3-center w3-round-large acc-sec-header">Select annotation</div>
+     <table id="tblAnnotationId" class="table" >
+    <thead>
+      <tr class="acc-font">
+        <th></th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Creator</th>
+      </tr>
+    </thead>
+    <tbody  data-link="row" class="rowlink">
+    </tbody>
+  </table>
+  </div>
+</div> <!-- Workspace Div Closes -->
+</div> <!-- row fluid div end -->
+
+<div class="row-fluid">
+  <div class="span12>"
+<!-- Div to show breadcrumbz STARTS-->
+      <div class="row w3-round-large header-bar w3-padding-small" id="breadcrumbz" >
+        <div class="col-sm-10" id="breadcrumz_data">
+          
+              <select id="frame_names_select" class="framenav-dropdown" onchange="jump_to_frame()">
+               
+              </select>
+          </label>
+
+        </div>
+        <div class="btn-group col-sm-2">
+          <a data-toggle="tooltip" title="Select Draw mode and class label to enable drawing" data-placement="bottom" id="is_draw_mode" onclick="draw_icon_click()"><img src="assets/images/pencil_disabled1.png"/></a>
+          <a onclick="delete_objects()" data-toggle="tooltip" title="Click to delete selected annotations" data-placement="bottom"><img src="assets/images/delete1.png"/></a>
+          <a onclick="show_overlay()" data-toggle="tooltip" title="Click to see activity log!" data-placement="bottom"><img src="assets/images/note1.png"/></a>
+
+          <a onclick="goHome()" data-toggle="tooltip" title="Go home" data-placement="bottom"><img src="assets/images/home1.png"/></a>
+          <a onclick="logout()" data-toggle="tooltip" title="Log out!" data-placement="bottom"><img src="assets/images/logout1.png"/></a>
+          <a data-toggle="tooltip" title="Help" data-placement="bottom"><img src="assets/images/info1.png"/></a>
+        </div>
+
+        
+      </div>
+        <div class="alert alert-danger alert-dismissable" id="error_alert" style="display:none">
+          <a href="#" class="close" data-dismiss="alert" data-toggle="tooltip" title="Close" data-placement="top" aria-label="close">&times;</a>
+          <strong>Attention!</strong>
+        </div>
+     
+
+      <div class="row span12" id="map_status">
+        <div class="col-sm-6" id="object_count"></div>
+        <div class="col-sm-6" id="cursor_pos_div"></div>
+      </div>
+
+  <div id="map"></div>
+   <!-- Show left and right arrows to move to next/prev image STARTS-->
+     <div id="pagination">
+          <a class="prev" id="prev">&#10094;</a>
+          <a class="next" id="next">&#10095;</a>
+      </div> 
+</div>
+</div>
+ 
+<!--<canvas class="w3-container  w3-green" id='map'></canvas> -->
+</div>
+ <!-- Container div closes-->
+
+<!-- Div to show images for annotation -->
+<!-- Canvas start-->
+
+<div id="overlay" onclick="hide_overlay()">
+  <div id="activity_log">
+    <div class="alert_custom alert-info">Launched dragonfly.</div>
+</div>
+</div>
+<div id="snackbar"></div>
+
+<div id="dialog" title="Annotation Details">
+     <div class="row span12">
+            <div class="col-sm-4 w3-left">Class Label:</div>
+            <div class="col-sm-8 w3-left"> <select id="classLayerDropbox" onchange="update_selected_annotation_from_details()">
+                  </select></div>
+      </div>
+      <div class="row  span12">
+            <div class="col-sm-4 w3-left">Type: </div>
+            <div class="col-sm-8 w3-left" id="deatils_type"></div>
+      </div>
+      <div class="row span12">
+            <div class="col-sm-4 w3-left">FrameObjectID: </div>
+            <div class="col-sm-8 w3-left" id="deatils_frameObjectID"></div>
+      </div>
+</div>
+
+</body>
+</html>

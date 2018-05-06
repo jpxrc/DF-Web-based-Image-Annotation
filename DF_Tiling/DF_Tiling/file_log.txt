@@ -1,0 +1,1 @@
+extract_area ../DragonFly/path_symlinks/Argus/tiled/out0002.tiff[page=2] out0002_tiff_2_1_1.jpg 256 256 256 230

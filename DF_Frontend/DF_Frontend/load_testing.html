@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>dragonfly</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+<script src="assets/js/urls.js"></script>
+
+<body>
+
+<script type="text/javascript">
+var annotationId=7;
+var framenumber=1;
+var class_layer_id = 23;
+var user_id = 203;
+
+login();
+var test_count = [];
+test_count.push(20);
+/*test_count.push(20);
+test_count.push(50);
+test_count.push(100);
+test_count.push(500);
+test_count.push(1000);*/
+var value = 10;
+MarkeObjectsList = [];
+
+	
+	//Form request to save
+	for (i = 0; i < value; i++) 
+	{ 
+		console.log("i:::"+i)
+		var markedObject = form_marked_object_to_save("freeFormPoly",i);
+	
+		var  ff_array = [];
+	    var freeFormPoly = '';
+	    var polygonKey1;
+		//add 20 points to polygon
+		for (k = 0; k < 20; k++) 
+		{ 
+	    	freeFormPoly = new Object;
+	        polygonKey1 = new Object();
+	        polygonKey1.order = k;
+	        freeFormPoly.x = k+3;
+	        freeFormPoly.y = k+3;
+	        freeFormPoly.polygonKey = polygonKey1; 
+	        ff_array.push(freeFormPoly);
+		}
+		markedObject.freeFormPoly = ff_array;
+		MarkeObjectsList.push(markedObject);
+
+		var markedObject = form_marked_object_to_save("circle",i);
+		var circle = new Object();
+		circle.x1 = 170;
+	    circle.y1 = 170;
+		circle.x2 = 190;
+	   	circle.y2 = 190;
+	   	markedObject.circle = circle;
+	   	MarkeObjectsList.push(markedObject);
+	}
+
+	var start = new Date();
+
+	
+
+
+
+//Helper functions start
+
+
+function retreive_request(num_of_objects)
+{
+	var markedObjectRequest = new Object();
+   markedObjectRequest.annotationID = annotationId;
+   markedObjectRequest.frameNumber= framenumber;
+   var start = new Date();
+  $.ajax({
+        type: "POST",
+        url: url.getMarkedObjects,
+        data: JSON.stringify(markedObjectRequest),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function(data){
+          console.log(data);
+          var end = new Date();
+          var message = "Retrieve "+ num_of_objects+"C +"+ num_of_objects+"P."+"Number of objects retreived: "+Number(data.length)+", Time elapsed: "+(end.getTime() - start.getTime())+"ms<br>";
+           $("#log").append(message);
+           delete_request(num_of_objects, data);
+          },
+        failure: function(errMsg) {
+           console.log("retreive_ failed:: "+num_of_objects);
+        }
+  });
+}
+
+function save_request(num_of_objects, MarkeObjectsList )
+{
+	var start = new Date();
+      $.ajax({
+            type: "POST",
+            url: url.saveMarkedObjects,
+            data: JSON.stringify(MarkeObjectsList),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success: function(data){
+              
+              console.log("success :: ");
+              console.log(data);
+              var end = new Date();
+              var message = "Saved "+ num_of_objects+"C +"+ num_of_objects+"P.. Time elapsed: "+(end.getTime() - start.getTime())+"ms<br>";
+              $("#log").append(message);
+              retreive_request(value);
+
+
+            },
+            
+            failure: function(errMsg) {
+                console.log("save failed:: "+num_of_objects);
+            },
+            complete: function(xhr, textStatus) {
+                console.log(xhr.status);
+                if(xhr.status != 200)
+                {
+                   console.log("save failed:: "+num_of_objects);
+                }
+              } 
+
+      });
+}
+
+
+function delete_request(num_of_objects, MarkeObjectsList )
+{
+
+ var start = new Date();
+$.ajax({
+        type: "POST",
+        url: url.deleteMarkedObject,
+        data: JSON.stringify(MarkeObjectsList),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function(data){
+          var end = new Date();
+          var message = "Deleted "+ num_of_objects+"C +"+ num_of_objects+"P.. Time elapsed: "+(end.getTime() - start.getTime())+"ms<br>";
+          $("#log").append(message);
+        },
+        failure: function(errMsg) {
+             console.log("Delete failed:: "+num_of_objects);
+        },
+        complete: function(xhr, textStatus) {
+            console.log(xhr.status);
+            if(xhr.status != 200)
+            {
+               console.log("Delete failed:: "+num_of_objects);
+            }
+          } 
+  });
+}
+
+
+function login()
+{
+
+	 //make an ajax call to the authenticate service
+	 $.ajax({
+        type: "POST",
+        url: url.authenticateUser,
+        //data: JSON.stringify(authenticate_user),
+        data: { username: "guest@firefly.edu", password: "guest" },
+        //contentType: "application/json; charset=utf-8",
+        //dataType: "json",
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function(data){
+        	console.log("login :: " +  data.status);
+
+	
+			save_request(value, MarkeObjectsList);
+        	
+        	
+        },
+        statusCode: {
+              401: function() {
+                console.log("in 401");
+                 
+              }
+          },
+        error: function(errMsg) {
+          console.log("login :: " +  errMsg);
+        }
+  });
+}
+
+//Function forms the markedObject request to be sent to save request
+function form_marked_object_to_save(type,i)
+{
+   var markedObject = new Object();
+   markedObject.annotationID = annotationId;
+   markedObject.classLayerID = class_layer_id;
+   markedObject.label='P';
+   markedObject.createdBy = user_id;
+   markedObject.type = type;
+   markedObject.frameNumber=framenumber;
+   markedObject.frameObjectID = i;
+   
+
+   //markedObject.date will be set on the server
+   return markedObject;
+}
+
+
+//Helper functions end
+
+</script>	
+
+<div id="log"></div>
+
+</body>
+</html>

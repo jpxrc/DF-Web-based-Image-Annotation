@@ -1,0 +1,270 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+
+
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #5d7ab6;
+}
+
+/*
+body {
+  	background-color: #ffffff;
+  	font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #555;
+
+    
+}*/
+
+
+.div_header{
+	background-color: #1abc9c;
+	border-color: #16a085;
+	padding-bottom: 20px;
+	padding-top: 20px;
+
+}
+
+
+.show_elem {
+    display: block;
+}
+
+
+
+.hide_elem {
+    display: none;
+}
+
+
+
+.visible_elem {
+    visibility: visible;
+}
+
+
+
+.invisible_elem {
+    visibility: hidden;
+}
+
+#container {
+         overflow: auto;
+          border: 1px solid;
+    }
+    
+
+
+#slider { position: absolute; top: 10px; right: 10px; }
+
+
+/* Next & previous buttons */
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 10px;
+  margin-top: 50px;
+  color: white;
+  font-size: 4em;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+
+.modal-content.ui-resizable {
+  
+}
+
+
+
+/*Rectangle bar class styling*/
+
+.bar {
+  fill: #0080FF
+}
+
+.bar:hover {
+  fill: #003366
+}
+
+/*Text class styling*/
+
+.text {
+  fill: #286090;
+  font-family: sans-serif
+}
+
+.font-bold
+{
+  font-weight: bold;
+}
+
+.statistics_div
+{
+  height : 530px;
+  width: 330px;
+}
+
+#map { position: absolute; height:80vh; width: 100%;  }
+
+.modify_viewport
+{
+  height:0px;
+}
+
+/* styles for labels in log overlay */
+.info_msg
+{
+  font-family: sans-serif;
+  font-color: yellow;
+  font-style: normal;
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+
+.success_msg
+{
+  font-family: sans-serif;
+  font-color: green;
+  font-style: normal;
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+.error_msg
+{
+  font-family: sans-serif;
+  font-color: red;
+  font-style: normal;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/*overlay div to show activity log*/
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 2;
+    cursor: pointer;
+    overflow: scroll;
+}
+
+/* reduce height and transparency of alert messages */
+.alert_custom {
+  margin-bottom: 1px;
+  height: 30px;
+  line-height:30px;
+  padding:0px 15px;
+  opacity:0.7;
+}
+
+/*css for snack bar start */
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+    visibility: visible; /* Show the snackbar */
+
+/* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+/*css for snack bar end */
+
+
+.w3-green, .w3-hover-green:hover {
+  /* 4caf94 */
+    color: #f1f1f1!important;
+    background-color: #4caf94!important;
+}
+
+.header-bar, .hover-green:hover {
+  color: #f1f1f1!important;
+    background-color: #4caf94!important;
+  }
+
+.half-opaque
+{
+  opacity:0.5;
+}
+
+
+.framenav-dropdown{
+     /* width: 10em;
+    line-height: 3em; */
+    font-family: 'Open Sans', sans-serif;
+    color: black;
+    margin-left: 1em;
+    margin-right: .3em;
+    border-radius: 3em;
+    border: solid #f2f2f2;
+    outline: none;
+}
