@@ -304,6 +304,7 @@ function save_markedObject_to_db(data_input, service_url,event)
                         update_object_counts_on_remote_delete(properties.type, +1);
                         populate_object_count();
                         event.feature.setProperties(properties);
+                        event.feature.setId(markedObjectID_of_saved_feature);
                         console.log("Before emit::")
                         data_input.markedObjectID = markedObjectID_of_saved_feature;
                         emit_saved_object(data_input);
@@ -466,7 +467,7 @@ function add_to_broadcast_to_layer(feature_added)
   var classlayerID = feature_added.classLayerID;
   var frameNumber = feature_added.frameNumber;
   var annotationID= feature_added.annotationID;
-  console.log("classlayerID:: "+classlayerID+",frameNumber:: "+frameNumber+",annotationID:::"+annotationID);
+  console.log("classlayerID:: "+classlayerID+",frameNumber:: "+frameNumber+",annotationID:::"+annotationID+",markedObjectID::"+feature_added.markedObjectID);
   if(annotationID == selected_annotation.annotationID)
   {
     if(frameNumber==current_frame_number)
@@ -510,7 +511,7 @@ function handle_deleted_features_event(deleted_features)
         classlayerID = value.classLayerID;
         id = value.markedObjectID;
         update_object_counts_on_remote_delete(value.type, -1);
-        var feature = vector_source_list[classlayerID].getFeatureById(id);
+        var feature = vector_source_list[classlayerID].getFeatureById($.trim(id));
         vector_source_list[classlayerID].removeFeature(feature);
       });
     }
@@ -739,7 +740,7 @@ function draw_square()
         //var points = $.parseJSON(pp).coordinates[0];
         console.log("square:::");   
         console.log(pp);
-        markedObject = form_marked_object_to_save("box");
+        markedObject = form_marked_object_to_save("freeForm");
         var  ff_array = [];
         var freeFormPoint = '';
          
@@ -788,9 +789,7 @@ function draw_rectangle()
               }
               var start = coordinates[0];
               var end = coordinates[1];
-              geometry.setCoordinates([
-                [start, [start[0], end[1]], end, [end[0], start[1]], start]
-              ]);
+              geometry.setCoordinates([[start, [start[0], end[1]], end, [end[0], start[1]], start]]);
               return geometry;
             };
     //remove interaction from previously selected drawing tool
@@ -815,13 +814,13 @@ function draw_rectangle()
         //var points = $.parseJSON(pp).coordinates[0];
         console.log("square:::");   
         console.log(pp);
-        markedObject = form_marked_object_to_save("box");
+        markedObject = form_marked_object_to_save("freeForm");
         var  ff_array = [];
         var freeFormPoint = '';
          
         var points = $.parseJSON(pp).coordinates[0];
         var polygonKey1;
-        /* $.each(points, function(index, value)
+        $.each(points, function(index, value)
          {
             freeFormPoint = new Object;
             polygonKey1 = new Object();
@@ -831,23 +830,13 @@ function draw_rectangle()
             freeFormPoint.polygonKey = polygonKey1;
             ff_array.push(freeFormPoint);
 
-         });*/
+         });
 
-      var point1 = points[0];
-      var point2 = points[1];
-      var point3 = points[2];
-
-      var width = calculate_distance_between_2_points(point1[0],point1[1],point2[0],point2[1]);
-      var height = calculate_distance_between_2_points(point2[0],point2[1],point3[0],point3[1]);
-      boxObject = new Object();
-      boxObject.x = point1[0];
-      boxObject.y = Number(point1[1])*-1;
-      boxObject.width = width;
-      boxObject.height = height;
+     
 
 
-      markedObject.boxObject = boxObject;
-      save_markedObject_to_db(markedObject, url.saveBoxObject,event);
+      markedObject.freeFormPoint = ff_array;
+     save_markedObject_to_db(markedObject, url.saveFreeFormPoint,event);
        
      });
      map.addInteraction(draw);

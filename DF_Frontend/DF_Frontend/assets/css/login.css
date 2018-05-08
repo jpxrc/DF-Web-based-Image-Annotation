@@ -255,3 +255,8 @@ h1, h2, h3, h4, h5, h6, a {
   cursor: not-allowed;
   opacity: .65;
 }
+
+.dataTables_filter{
+  float:none;
+  text-align:center;
+  color:#fff; !important}

@@ -233,7 +233,7 @@ function initialize_interaction_variables()
       update_annotation_details_dialog();
 
 
-
+      add_modify_translate_to_map();
       
 
      });
@@ -310,7 +310,7 @@ function handle_modify_feature(feature)
          switch (type) {
                 case "freeForm":
                     var  ff_array = [];
-                    var freeFormPoly = '';
+                    var freeFormPoint = '';
                      
                     var points = $.parseJSON(pp).coordinates;
                     console.log($.parseJSON(pp).coordinates)
@@ -318,19 +318,20 @@ function handle_modify_feature(feature)
                      var polygonKey1;
                      $.each(points, function(index, value)
                      {
-                        freeFormPoly = new Object;
+                        freeFormPoint = new Object;
                         polygonKey1 = new Object();
                         polygonKey1.order = index;
-                        freeFormPoly.x = value[0];
-                        freeFormPoly.y = Number(value[1])*-1;
-                        freeFormPoly.polygonKey = polygonKey1; 
-                        ff_array.push(freeFormPoly);
+                        console.log(value);
+                        freeFormPoint.x = value[0][0];
+                        freeFormPoint.y = Number(value[0][1])*-1;
+                        freeFormPoint.polygonKey = polygonKey1; 
+                        ff_array.push(freeFormPoint);
 
                      });
 
             
-                  markedObject.freeFormPoly = ff_array;
-                  update_markedObject_to_db(markedObject, url.saveFreeFormPoly);
+                  markedObject.freeFormPoint = ff_array;
+                  update_markedObject_to_db(markedObject, url.saveFreeFormPoint);
                     
                     break;
                 case "freeFormPoly":
@@ -359,6 +360,7 @@ function handle_modify_feature(feature)
                     break; 
 
                 case "point":
+                      var point_object = new Object;
                      var point = $.parseJSON(pp).coordinates;
 
                       point_object.x = point[0];
@@ -392,7 +394,7 @@ function handle_modify_feature(feature)
                   break;
                 case "circle":
 
-                       var first_point = feature.getGeometry().getFirstCoordinate();
+                        var first_point = feature.getGeometry().getFirstCoordinate();
                         var last_point = feature.getGeometry().getLastCoordinate();
                         var circle = new Object();
 
@@ -439,6 +441,14 @@ function draw_image()
     resolutions: mapResolutions
   });
 
+  var tile_url = default_url.tile;
+
+  if(url_list[0] != undefined && url_list[0]['tileService'] != null)
+  {
+        tile_url = url_list[0]['tileService'];    
+
+  }
+  tile_url = tile_url + '/tile_vips.php'
  
   //Add image layer to the map
   var image_tile_layer = new ol.layer.Tile({
@@ -447,7 +457,8 @@ function draw_image()
           cacheSize: 4096,
           tileGrid: mapTileGrid,
           //url: "/datasets/20170607_155447/{z}/tiled_{y}_{x}.jpg"
-          url: url.tile +"?maxresolution="+mapMaxZoom+"&resolution={z}&row={y}&col={x}&path="+path_prefix+selected_imageset.path+"tiled/&image="+fr_number_to_name[current_frame_number]
+
+          url: tile_url +"?maxresolution="+mapMaxZoom+"&resolution={z}&row={y}&col={x}&path="+path_prefix+selected_imageset.path+"tiled/&image="+fr_number_to_name[current_frame_number]
           //x-> column, y->row
          
     })
@@ -500,11 +511,7 @@ var projection = new ol.proj.Projection({
         }) //view ends
     }); //Map ends
   
-  // map.getView().fit(mapExtent, map.getSize());
-   
-   // console.log(map.getView().getCenter());
-    //$("button").hide();
-
+  
 retain_draw_mode();
 } //draw_image() ends
 
@@ -624,6 +631,30 @@ function draw_image_and_annotations()
     });
    //Add interactions
    
+}
+
+
+
+function add_modify_translate_to_map()
+{
+   modify = new ol.interaction.Modify({
+        source: vector_source_list,
+        features: select.getFeatures(),
+         //insertVertex: false,
+          insertVertexCondition: function() {
+                console.log("Modify called")
+                return true;
+         
+        }
+      });
+
+ modify.on('modifyend', function (event) {
+
+          console.log(event.features.getArray()[0])
+           handle_modify_feature(event.features.getArray()[0])
+ });
+
+ map.addInteraction(modify);
 }
 
 
@@ -780,7 +811,7 @@ function draw_annotations(data)
  function add_vector_list_to_map()
  {
   Object.keys(vector_list).forEach(function(key) {
-    vector_list[key].setSource(vector_source_list[key]);
+       vector_list[key].setSource(vector_source_list[key]);
        map.addLayer(vector_list[key]);
      });
  }

@@ -352,6 +352,7 @@ function populateProjects(data)
 
        clearTable('tblImageset');
        clearTable('tblAnnotationId');
+       getServiceUrl(selected_project.id);
        getClassLbelsForProject(selected_project.id);
        append_to_log_info("Selected project  :  "+selected_project.name);
        getImagesetForProject(selected_project.id);
@@ -627,6 +628,9 @@ function populateAnnotations(data)
       console.log("selected_annotation.maxResolution::: "+selected_annotation.maxResolution)
       if(!download_flag)
       {
+        mapExtent = [];
+        tileExtent =[];
+        clear_map_and_vector_sources()
         $("#workspace-select").hide();
         $("#map").show();
         set_map_variables();
@@ -789,7 +793,15 @@ function getProjectsForLab(labId)
 function fetch_pyramid_depth(image_for_pdepth)
 {
 
-  serv_url = "https://tile.eecs.missouri.edu/getresolution.php?path="+path_prefix+selected_imageset.path+"tiled/&image="+image_for_pdepth
+var tile_url = default_url.tile;
+
+  if(url_list[0] != undefined && url_list[0]['tileService'] != null)
+  {
+        tile_url = url_list[0]['tileService'];    
+
+  }
+  tile_url = tile_url + '/getresolution.php'
+  serv_url = tile_url+"?path="+path_prefix+selected_imageset.path+"tiled/&image="+image_for_pdepth
    $.ajax({
         type: "GET",
         url: serv_url,
@@ -840,7 +852,7 @@ function getFrameNumberToNameMapping()
                    
 
                   
-                    
+                    fr_number_to_name={};
                     $('#frame_names_select').children().remove();
 
                     $.each(data, function (index, value) {
@@ -888,16 +900,46 @@ function getClassLbelsForProject(projectID)
 }
 
 
+
+//Function to gets tile url from db
+function getServiceUrl(projectID)
+{
+  url_list={}
+  $.ajax({
+        type: "GET",
+        url: url.geturls+"/"+projectID,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function(data){
+          
+          url_list = data;
+          },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
+  });
+}
+
+
 /**
 Makes a service call to get image set for the given project ID
 **/
 function getImagesetForProject(projectID)
 {
  
+var annotation_request = new Object();
+  annotation_request.userID = selected_userid;
+  annotation_request.projectID = projectID;
+
   $.ajax({
-        type: "GET",
-        url: url.getImageset+"/"+projectID,
+        type: "POST",
+        url: url.getImageset,
         contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(annotation_request),
         dataType: "json",
         xhrFields: {
             withCredentials: true

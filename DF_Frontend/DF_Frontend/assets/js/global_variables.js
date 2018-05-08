@@ -15,6 +15,7 @@ var current_frame_number='';
 var selected_lab='';
 var loggedin_user='';
 var class_layer_list='';
+var url_list={}
 var class_layer_details={};
 var fr_number_to_name={};
 var max_frameObjectID = 0;
